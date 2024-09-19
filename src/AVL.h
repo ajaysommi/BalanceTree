@@ -21,6 +21,7 @@ private:
     int bf = 0; //initializes balance factor to 0
     Node* insertHelper(Node* node, std::string name, std::string ufid);
     Node* searchIDHelper(Node* node, std::string ufid);
+    Node* searchNameHelper(Node* node, std::string name);
 
 public:
     void insert(std::string name, std::string ufid);

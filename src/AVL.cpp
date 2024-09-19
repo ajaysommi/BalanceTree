@@ -25,6 +25,7 @@ void AVLTree::searchID(std::string ufid) {
 Node* AVLTree::searchIDHelper(Node *node, std::string ufid) {
     Node* iterator = node;
 
+
     if (iterator == nullptr) {
         std::cout << "unsuccessful" << std::endl;
     }
@@ -42,6 +43,24 @@ Node* AVLTree::searchIDHelper(Node *node, std::string ufid) {
 
 void AVLTree::searchName(std::string name) {
     std::cout << "unsuccessful" << std::endl;
+}
+
+Node* AVLTree::searchNameHelper(Node *node, std::string name) {
+    Node* iterator = node;
+
+    if (iterator == nullptr) {
+        std::cout << "unsuccessful" << std::endl;
+    }
+
+    if (iterator->name == name) {
+        std::cout << iterator->ufid << std::endl;
+    }
+    if (iterator->left != nullptr) {
+        searchIDHelper(iterator->left, name);
+    }
+    if (iterator->right != nullptr) {
+        searchIDHelper(iterator->right, name);
+    }
 }
 
 void AVLTree::printInorder() {
