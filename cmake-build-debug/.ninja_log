@@ -1,0 +1,5 @@
+# ninja log v5
+3	435	1726617402255383793	CMakeFiles/AVL_Project.dir/src/main.cpp.o	5f4433fb7b4a62be
+439	490	1726617402310862694	AVL_Project	1b95b4add5811e15
+3	439	1726617402261007947	CMakeFiles/AVL_Project.dir/src/AVL.cpp.o	6284fb1508686bb2
+0	672	1726616023768759293	CMakeFiles/AVL_Testing.dir/src/AVL.cpp.o	bed5ced0691443b1
