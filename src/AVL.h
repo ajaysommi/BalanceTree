@@ -22,6 +22,11 @@ private:
     Node* insertHelper(Node* node, std::string name, std::string ufid);
     Node* searchIDHelper(Node* node, std::string ufid);
     Node* searchNameHelper(Node* node, std::string name);
+    Node* rotateLeft(Node* node);
+    Node* rotateRight(Node* node);
+    Node* rotateLeftRight(Node* node);
+    Node* rotateRightLeft(Node* node);
+    int getHeight(Node* node);
 
 public:
     void insert(std::string name, std::string ufid);
