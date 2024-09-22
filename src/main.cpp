@@ -32,7 +32,10 @@ int main(){
         getline(instream, number);
         tree.insert("Jackie", "3249043");
         tree.insert("Ajay", "0000001");
+        tree.insert("AAA", "0000000");
+        tree.insert("Azzz", "1234567");
         tree.searchName("Jackie");
+        tree.printLevelCount();
         tree.printInorder();
     }
 	return 0;

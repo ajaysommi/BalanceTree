@@ -3,23 +3,29 @@
 //used https://www.geeksforgeeks.org/insertion-in-binary-search-tree/ for assistance in inserting nodes
 
 Node* AVLTree::rotateLeft(Node *node) {
-
+    Node* gc = node->right->left;
+    Node* np = node->right;
+    np->left = gc;
+    return np;
 }
 
 Node* AVLTree::rotateRight(Node *node) {
-
+    Node* gc = node->left->right;
+    Node* np = node->left;
+    np->right = gc;
+    return np;
 }
 
 Node* AVLTree::rotateLeftRight(Node *node) {
-
+    node->left = rotateLeft(node->left);
+    node = rotateRight(node);
+    return node;
 }
 
 Node* AVLTree::rotateRightLeft(Node *node) {
-
-}
-
-int AVLTree::getHeight(Node *node) {
-
+    node->right = rotateRight(node->right);
+    node = rotateLeft(node);
+    return node;
 }
 
 void AVLTree::insert(std::string name, const std::string& ufid) {
@@ -79,7 +85,18 @@ bool AVLTree::searchIDHelper(Node *node, const std::string& ufid) {
 }
 
 void AVLTree::updateHeight(Node *node) {
-    //check balance factor left and right and call rotations
+    //update individual height variable for each node
+
+    if (node == nullptr) {
+        return;
+    }
+    else {
+        node->height = 1 + std::max(node->left->height, node->right->height); //seg fault
+    }
+}
+
+int AVLTree::getHeight(Node *node) {
+    return node->height;
 }
 
 void AVLTree::searchName(const std::string& name) {
@@ -193,6 +210,7 @@ void AVLTree::printPostorderHelper(Node *node) {
 void AVLTree::printLevelCount() {
     if (this->root != nullptr) {
         printLevelCountHelper(this->root);
+        depth_level = 0;
     }
     else {
         std::cout << 0 << std::endl;
@@ -202,7 +220,6 @@ void AVLTree::printLevelCount() {
 void AVLTree::printLevelCountHelper(Node *node) {
     //using queue and BFS
     std::queue<Node*> total_q;
-    int depth_level = 0; //tracks number of levels in tree
     if (node != nullptr) {
         total_q.push(node);
     }
@@ -210,15 +227,16 @@ void AVLTree::printLevelCountHelper(Node *node) {
         std::cout << 0 << std::endl;
     }
     while (not total_q.empty()) {
-        total_q.pop();
+        depth_level++;
         for (int i = 0; i < total_q.size(); i++) {
-            if (node->left != nullptr) {
-                total_q.push(node->left);
+            Node* iter_node = total_q.front();
+            total_q.pop();
+            if (iter_node->left != nullptr) {
+                total_q.push(iter_node->left);
             }
-            if (node->right != nullptr) {
-                total_q.push(node->right);
+            if (iter_node->right != nullptr) {
+                total_q.push(iter_node->right);
             }
-            depth_level++;
         }
     }
     std::cout << depth_level << std::endl;

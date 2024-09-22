@@ -21,6 +21,7 @@ private:
     Node* root = nullptr;
     bool comma_val = false;
     int bf = 0; //initializes balance factor to 0
+    int depth_level = 0;
     Node* insertHelper(Node* node, const std::string& name, const std::string& ufid);
     bool searchIDHelper(Node* node, const std::string& ufid);
     bool searchNameHelper(Node* node, const std::string& name);
@@ -38,12 +39,12 @@ private:
 public:
     void insert(std::string name, const std::string& ufid);
     void removeID(const std::string& ufid);
-    void searchID(const std::string& ufid);
-    void searchName(const std::string& name);
-    void printInorder();
-    void printPreorder();
-    void printPostorder();
-    void printLevelCount();
+    void searchID(const std::string& ufid); //good
+    void searchName(const std::string& name); //good
+    void printInorder(); //good
+    void printPreorder(); //good
+    void printPostorder(); //good
+    void printLevelCount(); //good
     void removeInorder(int N);
 
 
