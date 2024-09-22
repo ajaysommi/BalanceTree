@@ -1,3 +1,4 @@
+#include <queue>
 #include "AVL.h"
 //used https://www.geeksforgeeks.org/insertion-in-binary-search-tree/ for assistance in inserting nodes
 
@@ -28,7 +29,11 @@ void AVLTree::insert(std::string name, const std::string& ufid) {
 Node* AVLTree::insertHelper(Node *node, const std::string& name, const std::string& ufid) {
     //if BST empty
     if (node == nullptr) {
-        return new Node(name, ufid);
+        std::cout << "successful" << std::endl;
+        Node* newNode = new Node(name, ufid);
+        updateHeight(newNode);
+        return newNode;
+        //return new Node(name, ufid);
     }
     else if (std::stoi(ufid) < std::stoi(node->ufid)) {
         node->left = insertHelper(node->left, name, ufid);
@@ -44,26 +49,33 @@ void AVLTree::removeID(const std::string& ufid) {
 }
 
 void AVLTree::searchID(const std::string& ufid) {
-    searchIDHelper(this->root, ufid);
-}
-
-Node* AVLTree::searchIDHelper(Node *node, const std::string& ufid) {
-    Node* iterator = node;
-
-    if (iterator == nullptr) {
+    if (this->root == nullptr) {
         std::cout << "unsuccessful" << std::endl;
     }
     else {
-        if (iterator->ufid == ufid) {
-            std::cout << iterator->name << std::endl;
-        }
-        if (iterator->left != nullptr) {
-            searchIDHelper(iterator->left, ufid);
-        }
-        if (iterator->right != nullptr) {
-            searchIDHelper(iterator->right, ufid);
+        bool ID_check = searchIDHelper(this->root, ufid);
+        if (!ID_check) {
+            std::cout << "unsuccessful" << std::endl;
         }
     }
+}
+
+bool AVLTree::searchIDHelper(Node *node, const std::string& ufid) {
+    Node* iterator = node;
+    if (iterator == nullptr) {
+        return false;
+    }
+    if (std::stoi(iterator->ufid) == std::stoi(ufid)) {
+        std::cout << iterator->name << std::endl;
+        return true;
+    }
+    if (std::stoi(ufid) < std::stoi(iterator->ufid) && iterator->left != nullptr) {
+        return searchIDHelper(iterator->left, ufid);
+    }
+    if (std::stoi(ufid) > std::stoi(iterator->ufid) && iterator->right != nullptr) {
+        return searchIDHelper(iterator->right, ufid);
+    }
+    return false;
 }
 
 void AVLTree::updateHeight(Node *node) {
@@ -71,26 +83,33 @@ void AVLTree::updateHeight(Node *node) {
 }
 
 void AVLTree::searchName(const std::string& name) {
-    searchNameHelper(this->root, name);
-}
-
-Node* AVLTree::searchNameHelper(Node *node, const std::string& name) {
-    Node* iterator = node;
-
-    if (iterator == nullptr) {
+    if (this->root == nullptr) {
         std::cout << "unsuccessful" << std::endl;
     }
     else {
-        if (iterator->name == name) {
-            std::cout << iterator->ufid << std::endl;
-        }
-        if (iterator->left != nullptr) {
-            searchNameHelper(iterator->left, name);
-        }
-        if (iterator->right != nullptr) {
-            searchNameHelper(iterator->right, name);
+        bool name_check = searchNameHelper(this->root, name);
+        if (!name_check) {
+            std::cout << "unsuccessful" << std::endl;
         }
     }
+}
+
+bool AVLTree::searchNameHelper(Node *node, const std::string& name) {
+    Node* iterator = node;
+    if (iterator == nullptr) {
+        return false;
+    }
+    if (iterator->name == name) {
+        std::cout << iterator->ufid << std::endl;
+        return true;
+    }
+    if (name < iterator->name && iterator->left != nullptr) {
+        return searchNameHelper(iterator->left, name);
+    }
+    if (name > iterator->name && iterator->right != nullptr) {
+        return searchNameHelper(iterator->right, name);
+    }
+    return false;
 }
 
 void AVLTree::printPreorder() {
@@ -124,7 +143,7 @@ void AVLTree::printInorder() {
         std::cout << "" << std::endl;
     }
     else {
-        printPreorderHelper(this->root);
+        printInorderHelper(this->root);
         this->comma_val = false; //condition indicates if beginning of print statement
     }
 }
@@ -172,11 +191,37 @@ void AVLTree::printPostorderHelper(Node *node) {
 }
 
 void AVLTree::printLevelCount() {
-    //use queue and BFS
-    int level = 0; //tracks number of levels in tree
-    if (this->root == nullptr) {
+    if (this->root != nullptr) {
+        printLevelCountHelper(this->root);
+    }
+    else {
         std::cout << 0 << std::endl;
     }
+}
+
+void AVLTree::printLevelCountHelper(Node *node) {
+    //using queue and BFS
+    std::queue<Node*> total_q;
+    int depth_level = 0; //tracks number of levels in tree
+    if (node != nullptr) {
+        total_q.push(node);
+    }
+    else {
+        std::cout << 0 << std::endl;
+    }
+    while (not total_q.empty()) {
+        total_q.pop();
+        for (int i = 0; i < total_q.size(); i++) {
+            if (node->left != nullptr) {
+                total_q.push(node->left);
+            }
+            if (node->right != nullptr) {
+                total_q.push(node->right);
+            }
+            depth_level++;
+        }
+    }
+    std::cout << depth_level << std::endl;
 }
 
 void AVLTree::removeInorder(int N) {

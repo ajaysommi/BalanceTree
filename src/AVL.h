@@ -2,10 +2,11 @@
 #include <iostream>
 
 struct Node {
-    std::string name;
-    std::string ufid;
+    std::string name = "";
+    std::string ufid = "";
     Node* left;
     Node* right;
+    int height = 0;
 
     Node(std::string name, std::string ufid) {
         this->name = name;
@@ -21,8 +22,8 @@ private:
     bool comma_val = false;
     int bf = 0; //initializes balance factor to 0
     Node* insertHelper(Node* node, const std::string& name, const std::string& ufid);
-    Node* searchIDHelper(Node* node, const std::string& ufid);
-    Node* searchNameHelper(Node* node, const std::string& name);
+    bool searchIDHelper(Node* node, const std::string& ufid);
+    bool searchNameHelper(Node* node, const std::string& name);
     Node* rotateLeft(Node* node);
     Node* rotateRight(Node* node);
     Node* rotateLeftRight(Node* node);
@@ -30,6 +31,7 @@ private:
     void printPreorderHelper(Node* node);
     void printInorderHelper(Node* node);
     void printPostorderHelper(Node* node);
+    void printLevelCountHelper(Node* node);
     void updateHeight(Node* node);
     int getHeight(Node* node);
 
