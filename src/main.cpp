@@ -29,13 +29,18 @@ int main(){
         getline(instream, skip2, ' ');
         std::string number;
         getline(instream, number);
-        tree.insert("Jackie", "3249043");
         tree.insert("Ajay", "0000001");
-        tree.insert("AAA", "0000000");
-        tree.insert("Azzz", "1234567");
-        tree.searchName("Jackie");
-        tree.printLevelCount();
+        tree.insert("Jackie", "0000002");
+        tree.insert("AAA", "0000003");
+        tree.insert("Azzz", "0000004");
+        tree.searchName("Ajay");
+//        tree.printLevelCount();
+//        tree.printInorder();
+        //tree.removeID("3249043");
+        tree.removeID("0000004");
         tree.printInorder();
+        tree.printPreorder();
+        tree.printPostorder();
     }
 	return 0;
 }
