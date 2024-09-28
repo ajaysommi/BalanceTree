@@ -1,7 +1,6 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-#include "AVL.h"
 #include "AVL.cpp"
 
 

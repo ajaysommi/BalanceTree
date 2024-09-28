@@ -6,14 +6,14 @@ Node* AVLTree::rotateLeft(Node *node) {
     Node* gc = node->right->left;
     Node* np = node->right;
     np->left = gc;
-    return np;
+    return np; //update heights once don
 }
 
 Node* AVLTree::rotateRight(Node *node) {
     Node* gc = node->left->right;
     Node* np = node->left;
     np->right = gc;
-    return np;
+    return np; //update heights once don
 }
 
 Node* AVLTree::rotateLeftRight(Node *node) {
@@ -37,7 +37,6 @@ Node* AVLTree::insertHelper(Node *node, const std::string& name, const std::stri
     if (node == nullptr) {
         std::cout << "successful" << std::endl;
         Node* newNode = new Node(name, ufid);
-        updateHeight(newNode);
         return newNode;
         //return new Node(name, ufid);
     }
@@ -47,6 +46,28 @@ Node* AVLTree::insertHelper(Node *node, const std::string& name, const std::stri
     else {
         node->right = insertHelper(node->right, name, ufid);
     }
+    //call update height function
+    node->height = 1 + std::max(node->left == nullptr ? 0 : node->left->height,
+                                node->right == nullptr ? 0 : node->right->height);
+
+    if ((node->left == nullptr ? 0 : node->left->height) - (node->right == nullptr ? 0 : node->right->height) == -2) {
+        //right heavy
+        if ((node->left == nullptr ? 0 : node->left->height) - (node->right == nullptr ? 0 : node->right->height) == 2) {
+            rotateRightLeft(node);
+        }
+        else {
+            rotateLeft(node);
+        }
+    }
+    else if ((node->left == nullptr ? 0 : node->left->height) - (node->right == nullptr ? 0 : node->right->height) == 2) {
+        if ((node->left == nullptr ? 0 : node->left->height) - (node->right == nullptr ? 0 : node->right->height) == -2) {
+            rotateLeftRight(node);
+        }
+        else {
+            rotateRight(node);
+        }
+    }
+
     return node;
 }
 
@@ -82,17 +103,6 @@ bool AVLTree::searchIDHelper(Node *node, const std::string& ufid) {
         return searchIDHelper(iterator->right, ufid);
     }
     return false;
-}
-
-void AVLTree::updateHeight(Node *node) {
-    //update individual height variable for each node
-
-    if (node == nullptr) {
-        return;
-    }
-    else {
-        node->height = 1 + std::max(node->left->height, node->right->height); //seg fault
-    }
 }
 
 int AVLTree::getHeight(Node *node) {
@@ -243,5 +253,26 @@ void AVLTree::printLevelCountHelper(Node *node) {
 }
 
 void AVLTree::removeInorder(int N) {
+    removeInorderHelper(this->root, N);
+    remove_counter = 0;
+    //usual bst delete but also update height after deleting
 
+    //once node removed, update heights, perform rotations
+}
+
+Node* AVLTree::removeHelper(Node *node) {
+    //rules based on 0, 1, 2 children. after performing operations, check bF and perform appropriate rotations.
+}
+
+void AVLTree::removeInorderHelper(Node *node, int N) {
+    remove_counter++;
+    if (node == nullptr) {
+        return;
+    }
+
+    removeInorderHelper(node->left, N);
+    if (remove_counter == N) {
+        removeHelper(node);
+    }
+    removeInorderHelper(node->right, N);
 }

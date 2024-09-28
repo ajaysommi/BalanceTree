@@ -22,8 +22,11 @@ private:
     bool comma_val = false;
     int bf = 0; //initializes balance factor to 0
     int depth_level = 0;
+    int remove_counter = 0;
     Node* insertHelper(Node* node, const std::string& name, const std::string& ufid);
+    Node* removeHelper(Node *node);
     bool searchIDHelper(Node* node, const std::string& ufid);
+    void removeInorderHelper(Node *node, int N);
     bool searchNameHelper(Node* node, const std::string& name);
     Node* rotateLeft(Node* node);
     Node* rotateRight(Node* node);
@@ -33,7 +36,6 @@ private:
     void printInorderHelper(Node* node);
     void printPostorderHelper(Node* node);
     void printLevelCountHelper(Node* node);
-    void updateHeight(Node* node);
     int getHeight(Node* node);
 
 public:
