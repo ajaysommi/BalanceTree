@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <cstdio>
 #include "AVL.cpp"
 
 
@@ -29,18 +30,27 @@ int main(){
         getline(instream, skip2, ' ');
         std::string number;
         getline(instream, number);
-        tree.insert("Ajay", "0000001");
-        tree.insert("Jackie", "0000002");
-        tree.insert("AAA", "0000003");
-        tree.insert("Azzz", "0000004");
+        tree.insert("A", "0000001");
+        tree.insert("B", "0000002");
+        tree.insert("C", "0000003");
+        tree.insert("D", "0000004");
+        tree.insert("E", "0000005");
+        tree.insert("F", "0000006");
         tree.searchName("Ajay");
-//        tree.printLevelCount();
+        tree.searchID("0000003");
+        tree.printLevelCount();
 //        tree.printInorder();
         //tree.removeID("3249043");
-        tree.removeID("0000004");
+        //tree.removeID("0000003"); //ERROR: remove function removes everything above. ex rm Jackie removes Ajay as well
+        tree.removeInorder(1);
+        //tree.removeInorder(2);
+        //tree.removeInorder(3);
         tree.printInorder();
+        std::cout << "" << std::endl;
         tree.printPreorder();
+        std::cout << "" << std::endl;
         tree.printPostorder();
+        std::cout << "" << std::endl;
     }
 	return 0;
 }

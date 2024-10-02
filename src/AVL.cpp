@@ -6,14 +6,20 @@
 Node* AVLTree::rotateLeft(Node *node) {
     Node* gc = node->right->left;
     Node* np = node->right;
-    np->left = gc;
+    np->left = node;
+    node->right = gc;
+    updateHeight(node);
+    updateHeight(np);
     return np; //update heights once don
 }
 
 Node* AVLTree::rotateRight(Node *node) {
     Node* gc = node->left->right;
     Node* np = node->left;
-    np->right = gc;
+    np->right = node;
+    node->left = gc;
+    updateHeight(node);
+    updateHeight(np);
     return np; //update heights once don
 }
 
@@ -31,6 +37,12 @@ Node* AVLTree::rotateRightLeft(Node *node) {
 
 void AVLTree::insert(std::string name, const std::string& ufid) {
     this->root = insertHelper(this->root, name, ufid);
+    if (!insertCond) { //prints unsuccessful if new node was not inserted and adjusts bool to reflect that
+        std::cout << "unsuccessful" << std::endl;
+    }
+    else {
+        insertCond = false;
+    }
 }
 
 Node* AVLTree::insertHelper(Node *node, const std::string& name, const std::string& ufid) {
@@ -38,37 +50,40 @@ Node* AVLTree::insertHelper(Node *node, const std::string& name, const std::stri
     if (node == nullptr) {
         std::cout << "successful" << std::endl;
         Node* newNode = new Node(name, ufid);
+        insertCond = true;
         return newNode;
         //return new Node(name, ufid);
     }
+
+    //binary search insertion using recursion
     else if (std::stoi(ufid) < std::stoi(node->ufid)) {
         node->left = insertHelper(node->left, name, ufid);
     }
     else {
         node->right = insertHelper(node->right, name, ufid);
     }
-    //call update height function
-    node->height = 1 + std::max(node->left == nullptr ? 0 : node->left->height,
-                                node->right == nullptr ? 0 : node->right->height);
 
+    //call update height function
+    updateHeight(node);
+
+    //call rotations
     if ((node->left == nullptr ? 0 : node->left->height) - (node->right == nullptr ? 0 : node->right->height) == -2) {
         //right heavy
-        if ((node->left == nullptr ? 0 : node->left->height) - (node->right == nullptr ? 0 : node->right->height) == 2) {
-            rotateRightLeft(node);
+        if ((node->left == nullptr ? 0 : node->left->height) - (node->right == nullptr ? 0 : node->right->height) == 1) {
+            node = rotateRightLeft(node);
         }
         else {
-            rotateLeft(node);
+            node = rotateLeft(node);
         }
     }
     else if ((node->left == nullptr ? 0 : node->left->height) - (node->right == nullptr ? 0 : node->right->height) == 2) {
-        if ((node->left == nullptr ? 0 : node->left->height) - (node->right == nullptr ? 0 : node->right->height) == -2) {
-            rotateLeftRight(node);
+        if ((node->left == nullptr ? 0 : node->left->height) - (node->right == nullptr ? 0 : node->right->height) == -1) {
+            node = rotateLeftRight(node);
         }
         else {
-            rotateRight(node);
+            node = rotateRight(node);
         }
     }
-
     return node;
 }
 
@@ -82,20 +97,30 @@ void AVLTree::removeID(const std::string& ufid) {
         removeIDCond = false;
     }
 }
+void AVLTree::updateHeight(Node *node) {
+    node->height = 1 + std::max(node->left == nullptr ? 0 : node->left->height,
+                                node->right == nullptr ? 0 : node->right->height);
+}
 
 Node* AVLTree::removeIDHelper(Node* node, const std::string& ufid) {
     if (node == nullptr) {
         return nullptr;
     }
-    if (std::stoi(node->ufid) == std::stoi(ufid)) {
+    if (node->ufid == ufid) { //dont need to convert to int
+        std::cout << "found" << node->ufid << std::endl;
         return removeHelper(node);
     }
-    if (std::stoi(ufid) < std::stoi(node->ufid) && node->left != nullptr) {
-        return removeIDHelper(node->left, ufid);
+    if (ufid < node->ufid && node->left != nullptr) {
+        std::cout << "less than" << node->ufid << std::endl;
+        node->left = removeIDHelper(node->left, ufid);
+        return node;
     }
-    if (std::stoi(ufid) > std::stoi(node->ufid) && node->right != nullptr) {
-        return removeIDHelper(node->right, ufid);
+    if (ufid > node->ufid && node->right != nullptr) {
+        std::cout << "greather than" << node->ufid << std::endl;
+        node->right = removeIDHelper(node->right, ufid);
+        return node;
     }
+    return node;
 }
 
 void AVLTree::searchID(const std::string& ufid) {
@@ -204,6 +229,7 @@ void AVLTree::printInorderHelper(Node *node) {
     }
 
     printInorderHelper(node->left);
+
     if (this->comma_val) {
         std::cout << ", " << node->name;
     } else {
@@ -276,51 +302,71 @@ void AVLTree::printLevelCountHelper(Node *node) {
 }
 
 Node* AVLTree::removeHelper(Node *node) {
-    if (this->root == nullptr) {
-        return this->root;
+    if (node == nullptr) {
+        return nullptr;
     }
     //rules based on 0, 1, 2 children. after performing operations, check bF and perform appropriate rotations.
     if (node->left == nullptr && node->right == nullptr) { //assumes node has no children
         removeIDCond = true;
+        delete node;
         return nullptr;
     }
+    //single child
     else if (node->left != nullptr && node->right == nullptr) {
         removeIDCond = true;
-        return node->left;
+        Node* leftC = node->left;
+        delete node;
+        updateHeight(leftC);
+        return leftC;
     }
     else if (node->left == nullptr && node->right != nullptr) {
         removeIDCond = true;
-        return node->right;
+        Node* rightC = node->right;
+        delete node;
+        updateHeight(rightC);
+        return rightC;
     }
+    //two children
     else if (node->left != nullptr && node->right != nullptr) {
         Node* tempNode = node->right;
         while (tempNode->left != nullptr) {
             tempNode = tempNode->left;
         }
-        node = tempNode;
+        //node = tempNode;
+        node->name = tempNode->name;
+        node->ufid = tempNode->ufid;
         node->right = removeHelper(node->right);
         removeIDCond = true;
+        updateHeight(node);
         return node;
     }
+    return nullptr;
 }
 
 void AVLTree::removeInorder(int N) {
-    removeInorderHelper(this->root, N);
-    remove_counter = 0;
+    this->root = removeInorderHelper(this->root, N);
+    if (!removeIDCond) {
+        std::cout << "unsuccessful" << std::endl;
+    }
+    else {
+        std::cout << "successful" << std::endl;
+        removeIDCond = false;
+        remove_counter = -1;
+    }
     //usual bst delete but also update height after deleting
 
     //once node removed, update heights, perform rotations
 }
 
-void AVLTree::removeInorderHelper(Node *node, int N) {
-    remove_counter++;
+Node* AVLTree::removeInorderHelper(Node *node, int N) {
     if (node == nullptr) {
-        return;
+        return nullptr;
     }
-
-    removeInorderHelper(node->left, N);
+    node->left = removeInorderHelper(node->left, N);
+    remove_counter++;
     if (remove_counter == N) {
-        node = removeHelper(node);
+        return removeHelper(node);
     }
-    removeInorderHelper(node->right, N);
+    node->right = removeInorderHelper(node->right, N);
+    return node;
 }
