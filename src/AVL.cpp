@@ -107,16 +107,13 @@ Node* AVLTree::removeIDHelper(Node* node, const std::string& ufid) {
         return nullptr;
     }
     if (node->ufid == ufid) { //dont need to convert to int
-        std::cout << "found" << node->ufid << std::endl;
         return removeHelper(node);
     }
     if (ufid < node->ufid && node->left != nullptr) {
-        std::cout << "less than" << node->ufid << std::endl;
         node->left = removeIDHelper(node->left, ufid);
         return node;
     }
     if (ufid > node->ufid && node->right != nullptr) {
-        std::cout << "greather than" << node->ufid << std::endl;
         node->right = removeIDHelper(node->right, ufid);
         return node;
     }
@@ -233,6 +230,7 @@ void AVLTree::printInorderHelper(Node *node) {
     if (this->comma_val) {
         std::cout << ", " << node->name;
     } else {
+        //if node left and right null print w/ newline
         std::cout << node->name;
         this->comma_val = true; //declares first word has been printed
     }
@@ -369,4 +367,15 @@ Node* AVLTree::removeInorderHelper(Node *node, int N) {
     }
     node->right = removeInorderHelper(node->right, N);
     return node;
+}
+
+//used https://www.programiz.com/cpp-programming/library-function/cctype/isalpha
+//for help with checking
+bool AVLTree::isAlphaVal(std::string name) {
+    for (char c : name) {
+        if (!isalpha(c)) {
+            return false;
+        }
+    }
+    return true;
 }

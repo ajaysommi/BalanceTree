@@ -52,6 +52,7 @@ public:
     void printPostorder(); //good
     void printLevelCount(); //good
     void removeInorder(int N);
+    bool isAlphaVal(std::string name);
 
 
 
