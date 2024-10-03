@@ -22,7 +22,8 @@ private:
     bool comma_val = false;
     bool removeIDCond = false;
     bool insertCond = false;
-    int bf = 0; //initializes balance factor to 0
+    bool duplicate_check = false;
+    //int bf = 0; //initializes balance factor to 0
     int depth_level = 0;
     int remove_counter = -1;
     Node* insertHelper(Node* node, const std::string& name, const std::string& ufid);
@@ -53,6 +54,7 @@ public:
     void printLevelCount(); //good
     void removeInorder(int N);
     bool isAlphaVal(std::string name);
+    bool duplicateExists(std::string ufid);
 
 
 

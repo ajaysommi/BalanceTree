@@ -36,24 +36,34 @@ int main(){
 
         if (operation == "insert") {
             //skips over first space (ex: insert/ /"Ajay" 1234567)
-            std::string skip;
-            getline(instream, skip, '"');
+            try {
+                std::string skip;
+                getline(instream, skip, '"');
 
-            //gathers name (ex: insert "/Ajay/" 1234567)
-            std::string name; //CHECK IS ALPHA()OSIDJFOISDJFOISJDFOSJDFOISJDF
-            //try catch for std::invalid_argument
-            getline(instream, name, '"');
+                //gathers name (ex: insert "/Ajay/" 1234567)
+                std::string name;
+                //try catch for std::invalid_argument
+                getline(instream, name, '"');
 
-            //skips over second space (ex: insert "Ajay"/ /1234567)
-            std::string skip2;
-            getline(instream, skip2, ' ');
+                //skips over second space (ex: insert "Ajay"/ /1234567)
+                std::string skip2;
+                getline(instream, skip2, ' ');
 
-            //gathers ufid (ex: insert "Ajay" /1234567/)
-            std::string number;
-            getline(instream, number);
+                //gathers ufid (ex: insert "Ajay" /1234567/)
+                std::string number;
+                getline(instream, number);
 
-            //executes insertion after gathering name and number
-            tree.insert(name, number);
+                //executes insertion after gathering name and number
+                if (tree.isAlphaVal(name) && name.length() > 0) {
+                    tree.insert(name, number);
+                }
+                else {
+                    std::cout << "unsuccessful" << std::endl;
+                }
+            }
+            catch (std::invalid_argument& e){
+                std::cout << "unsuccessful" << std::endl;
+            }
         }
 
         else if (operation == "remove") {
@@ -89,34 +99,6 @@ int main(){
                 tree.searchID(value);
                 //assume ufid being searched (search ID)
             }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            //skips over first space (ex: search/ /1234567)
-//            std::string skip;
-//            getline(instream, skip, ' ');
-//
-//            //skips over first space (ex: search/ /"Ajay")
-//            std::string skip;
-//            getline(instream, skip, '"');
-//
-//            //gathers value(name or ufid) (ex: search /1234567/ or search /)
-//            std::string value;
-//            getline(instream, value);
-
-            //check if alpha(). if valid proceed to name
         }
 
         else if (operation == "printInorder") {
@@ -152,44 +134,15 @@ int main(){
             getline(instream, number);
 
             //calls remove method with given ufid
-            tree.removeInorder(std::stoi(skip)); //EXCEPTION HANDLE!!!!!!!!!!!!!!!
+            try {
+                tree.removeInorder(std::stoi(skip));
+            }
+            catch (std::exception& e) {
+                std::cout << "unsuccessful" << std::endl;
+            }
         }
-
-//        std::string skip;
-//        getline(instream, skip, '"');
-//        std::string name; //check if name is alpha()
-//        getline(instream, name, '"');
-//        std::string skip2;
-//        getline(instream, skip2, ' ');
-//        std::string number;
-//        getline(instream, number);
-
-//        tree.insert("A", "0000001");
-//        tree.insert("B", "0000002");
-//        tree.insert("C", "0000003");
-//        tree.insert("D", "0000004");
-//        tree.insert("E", "0000005");
-//        tree.insert("F", "0000006");
-//        tree.insert("G", "0000007");
-//        tree.insert("H", "0000008");
-//        tree.insert("I", "0000009");
-//        tree.searchName("Ajay");
-//        tree.searchID("0000003");
-//        tree.printLevelCount();
-////        tree.printInorder();
-//        //tree.removeID("3249043");
-//        //tree.removeID("0000003"); //ERROR: remove function removes everything above. ex rm Jackie removes Ajay as well
-//        tree.removeInorder(4);
-//        //tree.removeInorder(2);
-//        //tree.removeInorder(3);
-//        tree.printInorder();
-//        std::cout << "" << std::endl;
-//        tree.printPreorder();
-//        std::cout << "" << std::endl;
-//        tree.printPostorder();
-//        std::cout << "" << std::endl;
     }
-    std::cout << " " << std::endl;
+    //std::cout << " " << std::endl;
 	return 0;
 }
 

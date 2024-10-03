@@ -24,19 +24,21 @@ Node* AVLTree::rotateRight(Node *node) {
 }
 
 Node* AVLTree::rotateLeftRight(Node *node) {
-    node->left = rotateLeft(node->left);
+    node->left = rotateLeft(node->left);//check. add logic inside this dont call rotate functions
     node = rotateRight(node);
     return node;
 }
 
 Node* AVLTree::rotateRightLeft(Node *node) {
-    node->right = rotateRight(node->right);
+    node->right = rotateRight(node->right);//check
     node = rotateLeft(node);
     return node;
 }
 
 void AVLTree::insert(std::string name, const std::string& ufid) {
-    this->root = insertHelper(this->root, name, ufid);
+    if (isAlphaVal(name)) {
+        this->root = insertHelper(this->root, name, ufid);
+    }
     if (!insertCond) { //prints unsuccessful if new node was not inserted and adjusts bool to reflect that
         std::cout << "unsuccessful" << std::endl;
     }
@@ -69,7 +71,8 @@ Node* AVLTree::insertHelper(Node *node, const std::string& name, const std::stri
     //call rotations
     if ((node->left == nullptr ? 0 : node->left->height) - (node->right == nullptr ? 0 : node->right->height) == -2) {
         //right heavy
-        if ((node->left == nullptr ? 0 : node->left->height) - (node->right == nullptr ? 0 : node->right->height) == 1) {
+        if ((node->right->left == nullptr ? 0 : node->right->left->height)
+        - (node->right->right == nullptr ? 0 : node->right->right->height) == 1) {
             node = rotateRightLeft(node);
         }
         else {
@@ -77,7 +80,8 @@ Node* AVLTree::insertHelper(Node *node, const std::string& name, const std::stri
         }
     }
     else if ((node->left == nullptr ? 0 : node->left->height) - (node->right == nullptr ? 0 : node->right->height) == 2) {
-        if ((node->left == nullptr ? 0 : node->left->height) - (node->right == nullptr ? 0 : node->right->height) == -1) {
+        if ((node->left->left == nullptr ? 0 : node->left->left->height)
+        - (node->left->right == nullptr ? 0 : node->left->right->height) == -1) {
             node = rotateLeftRight(node);
         }
         else {
@@ -130,6 +134,16 @@ void AVLTree::searchID(const std::string& ufid) {
             std::cout << "unsuccessful" << std::endl;
         }
     }
+}
+
+bool AVLTree::duplicateExists(std::string ufid) {
+    duplicate_check = false;
+    searchID(ufid);
+    if (duplicate_check) {
+        return true;
+    }
+    duplicate_check = false;
+    return false;
 }
 
 bool AVLTree::searchIDHelper(Node *node, const std::string& ufid) {
@@ -190,6 +204,7 @@ void AVLTree::printPreorder() {
     }
     else {
         printPreorderHelper(this->root);
+        std::cout << std::endl;
         this->comma_val = false;
     }
 }
@@ -216,6 +231,7 @@ void AVLTree::printInorder() {
     }
     else {
         printInorderHelper(this->root);
+        std::cout << std::endl;
         this->comma_val = false; //condition indicates if beginning of print statement
     }
 }
@@ -244,6 +260,7 @@ void AVLTree::printPostorder() {
     }
     else {
         printPostorderHelper(this->root);
+        std::cout << std::endl;
         this->comma_val = false;
     }
 }
@@ -373,7 +390,7 @@ Node* AVLTree::removeInorderHelper(Node *node, int N) {
 //for help with checking
 bool AVLTree::isAlphaVal(std::string name) {
     for (char c : name) {
-        if (!isalpha(c)) {
+        if (!isalpha(c) && c != ' ') {
             return false;
         }
     }
