@@ -2,7 +2,7 @@
 #include <sstream>
 #include <string>
 #include <cstdio>
-#include "AVL.cpp"
+#include "AVL.h"
 
 
 /* Note: 
@@ -104,19 +104,19 @@ int main(){
         else if (operation == "printInorder") {
             //writes to console in comma-separated format
             tree.printInorder();
-            std::cout << "" << std::endl;
+            //std::cout << "" << std::endl;
         }
 
         else if (operation == "printPreorder") {
             //writes to console in comma-separated format
             tree.printPreorder();
-            std::cout << "" << std::endl;
+            //std::cout << "" << std::endl;
         }
 
         else if (operation == "printPostorder") {
             //writes to console in comma-separated format
             tree.printPostorder();
-            std::cout << "" << std::endl;
+            //std::cout << "" << std::endl;
         }
 
         else if (operation == "printLevelCount") {

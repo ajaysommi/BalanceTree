@@ -24,13 +24,13 @@ Node* AVLTree::rotateRight(Node *node) {
 }
 
 Node* AVLTree::rotateLeftRight(Node *node) {
-    node->left = rotateLeft(node->left);//check. add logic inside this dont call rotate functions
+    node->left = rotateLeft(node->left);
     node = rotateRight(node);
     return node;
 }
 
 Node* AVLTree::rotateRightLeft(Node *node) {
-    node->right = rotateRight(node->right);//check
+    node->right = rotateRight(node->right);
     node = rotateLeft(node);
     return node;
 }
