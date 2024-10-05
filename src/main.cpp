@@ -54,7 +54,7 @@ int main(){
                 getline(instream, number);
 
                 //executes insertion after gathering name and number
-                if (tree.isAlphaVal(name) && name.length() > 0) {
+                if (tree.isAlphaVal(name) && name.length() > 0 && number.length() == 8) {
                     tree.insert(name, number);
                 }
                 else {
@@ -140,6 +140,9 @@ int main(){
             catch (std::exception& e) {
                 std::cout << "unsuccessful" << std::endl;
             }
+        }
+        else {
+            std::cout << "unsuccessful" << std::endl;
         }
     }
     //std::cout << " " << std::endl;

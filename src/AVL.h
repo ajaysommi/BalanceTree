@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <vector>
 
 struct Node {
     std::string name = "";
@@ -18,6 +19,7 @@ struct Node {
 
 class AVLTree {
 private:
+    std::vector<std::string> list_of_ids;
     Node* root = nullptr;
     bool comma_val = false;
     bool removeIDCond = false;
@@ -32,6 +34,7 @@ private:
     Node* removeIDHelper(Node* node, const std::string& ufid);
     Node* removeInorderHelper(Node *node, int N);
     bool searchNameHelper(Node* node, const std::string& name);
+    void searchNameHelperVector(Node* node, const std::string& name);
     Node* rotateLeft(Node* node);
     Node* rotateRight(Node* node);
     Node* rotateLeftRight(Node* node);

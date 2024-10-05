@@ -61,6 +61,9 @@ Node* AVLTree::insertHelper(Node *node, const std::string& name, const std::stri
     else if (std::stoi(ufid) < std::stoi(node->ufid)) {
         node->left = insertHelper(node->left, name, ufid);
     }
+    else if (ufid == node->ufid) {
+        return node;
+    }
     else {
         node->right = insertHelper(node->right, name, ufid);
     }
@@ -173,30 +176,59 @@ void AVLTree::searchName(const std::string& name) {
         std::cout << "unsuccessful" << std::endl;
     }
     else {
-        bool name_check = searchNameHelper(this->root, name);
-        if (!name_check) {
+        searchNameHelperVector(this->root, name);
+        if (list_of_ids.empty()) {
             std::cout << "unsuccessful" << std::endl;
+        }
+        else {
+            for (auto i : list_of_ids) {
+                std::cout << i << std::endl;
+            }
+            list_of_ids.clear();
         }
     }
 }
 
-bool AVLTree::searchNameHelper(Node *node, const std::string& name) {
-    Node* iterator = node;
-    if (iterator == nullptr) {
-        return false;
+void AVLTree::searchNameHelperVector(Node *node, const std::string &name) {
+    if (node == nullptr) {
+        return;
     }
-    if (iterator->name == name) {
-        std::cout << iterator->ufid << std::endl;
-        return true;
+    searchNameHelperVector(node->left, name);
+    if (name == node->name) {
+        list_of_ids.push_back(node->ufid);
     }
-    if (name < iterator->name && iterator->left != nullptr) {
-        return searchNameHelper(iterator->left, name);
-    }
-    if (name > iterator->name && iterator->right != nullptr) {
-        return searchNameHelper(iterator->right, name);
-    }
-    return false;
+    searchNameHelperVector(node->right, name);
 }
+
+//void AVLTree::searchName(const std::string& name) {
+//    if (this->root == nullptr) {
+//        std::cout << "unsuccessful" << std::endl;
+//    }
+//    else {
+//        bool name_check = searchNameHelper(this->root, name);
+//        if (!name_check) {
+//            std::cout << "unsuccessful" << std::endl;
+//        }
+//    }
+//}
+
+//bool AVLTree::searchNameHelper(Node *node, const std::string& name) {
+//    Node* iterator = node;
+//    if (iterator == nullptr) {
+//        return false;
+//    }
+//    if (iterator->name == name) {
+//        std::cout << iterator->ufid << std::endl;
+//        return true;
+//    }
+//    if (name < iterator->name && iterator->left != nullptr) {
+//        return searchNameHelper(iterator->left, name);
+//    }
+//    if (name > iterator->name && iterator->right != nullptr) {
+//        return searchNameHelper(iterator->right, name);
+//    }
+//    return false;
+//}
 
 void AVLTree::printPreorder() {
     if (this->root == nullptr) {
